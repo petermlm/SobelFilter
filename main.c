@@ -10,24 +10,24 @@
  * representation
  */
 
-int rgbToGrey(byte *rgb, byte **grey, int buffer_size) {
-    // Take size for grey image and allocate memory
-    int grey_size = buffer_size / 3;
-    *grey = malloc(sizeof(byte) * grey_size);
+int rgbToGray(byte *rgb, byte **gray, int buffer_size) {
+    // Take size for gray image and allocate memory
+    int gray_size = buffer_size / 3;
+    *gray = malloc(sizeof(byte) * gray_size);
 
     // Make pointers for iteration
     byte *p_rgb = rgb;
-    byte *p_grey = *grey;
+    byte *p_gray = *gray;
 
-    // Calculate the value for every pixel in grey
-    for(int i=0; i<grey_size; i++) {
-        *p_grey = 0.30*p_rgb[0] + 0.59*p_rgb[1] + 0.11*p_rgb[2];
+    // Calculate the value for every pixel in gray
+    for(int i=0; i<gray_size; i++) {
+        *p_gray = 0.30*p_rgb[0] + 0.59*p_rgb[1] + 0.11*p_rgb[2];
 
         p_rgb += 3;
-        p_grey++;
+        p_gray++;
     }
 
-    return grey_size;
+    return gray_size;
 }
 
 /*
@@ -96,12 +96,12 @@ void itConv(byte *buffer, int buffer_size, int *op, byte **res) {
  * Contour
  */
 
-void contour(byte *sobel_h, byte *sobel_v, int grey_size, byte **contour_img) {
+void contour(byte *sobel_h, byte *sobel_v, int gray_size, byte **contour_img) {
     // Allocate memory for contour_img
-    *contour_img = malloc(sizeof(byte) * grey_size);
+    *contour_img = malloc(sizeof(byte) * gray_size);
 
     // Iterate through every pixel to calculate the contour image
-    for(int i=0; i<grey_size; i++) {
+    for(int i=0; i<gray_size; i++) {
         (*contour_img)[i] = 255 - (1.0/2.0)*(sobel_h[i] + sobel_v[i]);
     }
 }
@@ -111,8 +111,8 @@ void contour(byte *sobel_h, byte *sobel_v, int grey_size, byte **contour_img) {
  */
 
 int main(int argc, char *argv[]) {
-    byte *rgb, *grey;
-    int rgb_size, grey_size;
+    byte *rgb, *gray;
+    int rgb_size, gray_size;
     int sobel_h[] = {1, 0, -1, 2, 0, -2, 1, 0, -1},
         sobel_v[] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
     byte *sobel_h_res, *sobel_v_res;
@@ -121,25 +121,25 @@ int main(int argc, char *argv[]) {
     // Read file to rgb and get size
     rgb_size = readFile("img.rgb", &rgb);
 
-    // Get grey representation of the image
-    grey_size = rgbToGrey(rgb, &grey, rgb_size);
+    // Get gray representation of the image
+    gray_size = rgbToGray(rgb, &gray, rgb_size);
 
-    // Write grey image
-    writeFile("img_out_pre.gray", grey, grey_size);
+    // Write gray image
+    writeFile("img_out_pre.gray", gray, gray_size);
 
     // Make sobel operations
-    itConv(grey, grey_size, sobel_h, &sobel_h_res);
-    itConv(grey, grey_size, sobel_v, &sobel_v_res);
+    itConv(gray, gray_size, sobel_h, &sobel_h_res);
+    itConv(gray, gray_size, sobel_v, &sobel_v_res);
 
     // Write image after each sobel operator
-    writeFile("img_out_h.gray", sobel_h_res, grey_size);
-    writeFile("img_out_v.gray", sobel_v_res, grey_size);
+    writeFile("img_out_h.gray", sobel_h_res, gray_size);
+    writeFile("img_out_v.gray", sobel_v_res, gray_size);
 
     // Calculate contour matrix
-    contour(sobel_h_res, sobel_v_res, grey_size, &contour_img);
+    contour(sobel_h_res, sobel_v_res, gray_size, &contour_img);
 
     // Write sobel_img to a file
-    writeFile("img_out.gray", contour_img, grey_size);
+    writeFile("img_out.gray", contour_img, gray_size);
 
     return 0;
 }
