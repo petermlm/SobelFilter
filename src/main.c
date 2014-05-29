@@ -119,27 +119,27 @@ int main(int argc, char *argv[]) {
     byte *contour_img;
 
     // Read file to rgb and get size
-    rgb_size = readFile("img.rgb", &rgb);
+    rgb_size = readFile("../imgs/img.rgb", &rgb);
 
     // Get gray representation of the image
     gray_size = rgbToGray(rgb, &gray, rgb_size);
 
     // Write gray image
-    writeFile("img_out_pre.gray", gray, gray_size);
+    writeFile("../imgs/img_out_pre.gray", gray, gray_size);
 
     // Make sobel operations
     itConv(gray, gray_size, sobel_h, &sobel_h_res);
     itConv(gray, gray_size, sobel_v, &sobel_v_res);
 
     // Write image after each sobel operator
-    writeFile("img_out_h.gray", sobel_h_res, gray_size);
-    writeFile("img_out_v.gray", sobel_v_res, gray_size);
+    writeFile("../imgs/img_out_h.gray", sobel_h_res, gray_size);
+    writeFile("../imgs/img_out_v.gray", sobel_v_res, gray_size);
 
     // Calculate contour matrix
     contour(sobel_h_res, sobel_v_res, gray_size, &contour_img);
 
     // Write sobel_img to a file
-    writeFile("img_out.gray", contour_img, gray_size);
+    writeFile("../imgs/img_out.gray", contour_img, gray_size);
 
     return 0;
 }

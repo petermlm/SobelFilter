@@ -1,18 +1,22 @@
-FILES=main.c file_operations.c
-EXE=sobel
-FLAGS=-std=c99 -g -lm
-
 all:
-	gcc $(FILES) -o $(EXE) $(FLAGS)
+	cd src && make
+	cd tests && make
+
+check:
+	cd tests && make check
 
 run:
-	convert img.png img.rgb
-	./$(EXE)
-	convert -size 512x512 -depth 8 img_out_pre.gray img_out_pre.png
-	convert -size 512x512 -depth 8 img_out.gray img_out.png
-	convert -size 512x512 -depth 8 img_out_h.gray img_out_h.png
-	convert -size 512x512 -depth 8 img_out_v.gray img_out_v.png
+	convert imgs/img.png imgs/img.rgb
+	cd src && ./sobel
+	convert -size 512x512 -depth 8 imgs/img_out_pre.gray imgs/img_out_pre.png
+	convert -size 512x512 -depth 8 imgs/img_out.gray imgs/img_out.png
+	convert -size 512x512 -depth 8 imgs/img_out_h.gray imgs/img_out_h.png
+	convert -size 512x512 -depth 8 imgs/img_out_v.gray imgs/img_out_v.png
 
 clean:
-	rm img.rgb img_out* $(EXE)
+	cd src && make clean
+	cd tests && make clean
+
+clean_run:
+	rm imgs/img.rgb imgs/img_out_pre.gray imgs/img_out_pre.png imgs/img_out.gray imgs/img_out.png imgs/img_out_h.gray imgs/img_out_h.png imgs/img_out_v.gray imgs/img_out_v.png
 
