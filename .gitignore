@@ -1,4 +1,5 @@
 *.o
+*.a
 
 sobel
 check_sobel
