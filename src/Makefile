@@ -1,4 +1,4 @@
-FILES=main.c file_operations.c
+FILES=main.c sobel.c file_operations.c
 OBJS=$(FILES:.c=.o)
 ARQUIVE=libsobel.a
 EXE=sobel
