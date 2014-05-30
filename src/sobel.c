@@ -1,6 +1,8 @@
 #include "sobel.h"
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 #include "macros.h"
@@ -36,25 +38,23 @@ int rgbToGray(byte *rgb, byte **gray, int buffer_size) {
 
 void makeOpMem(byte *buffer, int buffer_size, int cindex, byte *op_mem) {
     int width = sqrt(buffer_size);
-    int line = cindex-width;
-    int offset = -1;
 
-    for(int i=0; i<SOBEL_OP_SIZE; i++) {
-        int index = line + offset;
+    int bottom = cindex-width < 0;
+    int top = cindex+width >= buffer_size;
+    int left = cindex % width == 0;
+    int right = (cindex+1) % width == 0;
 
-        if(index >= 0 && index < buffer_size) {
-            op_mem[i] = buffer[index];
-        } else {
-            op_mem[i] = 0;
-        }
+    op_mem[0] = !bottom && !left  ? buffer[cindex-width-1] : 0;
+    op_mem[1] = !bottom           ? buffer[cindex-width]   : 0;
+    op_mem[2] = !bottom && !right ? buffer[cindex-width+1] : 0;
 
-        offset++;
+    op_mem[3] = !left             ? buffer[cindex-1]       : 0;
+    op_mem[4] = buffer[cindex];
+    op_mem[5] = !right            ? buffer[cindex+1]       : 0;
 
-        if((i+1) % 3 == 0) {
-            line += width;
-            offset = -1;
-        }
-    }
+    op_mem[6] = !top && !left     ? buffer[cindex+width-1] : 0;
+    op_mem[7] = !top              ? buffer[cindex+width]   : 0;
+    op_mem[8] = !top && !right    ? buffer[cindex+width+1] : 0;
 }
 
 /*
@@ -81,6 +81,7 @@ void itConv(byte *buffer, int buffer_size, int *op, byte **res) {
 
     // Temporary memory for each pixel operation
     byte op_mem[SOBEL_OP_SIZE];
+    memset(op_mem, 0, SOBEL_OP_SIZE);
 
     // Make convolution for every pixel
     for(int i=0; i<buffer_size; i++) {

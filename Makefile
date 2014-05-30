@@ -6,7 +6,12 @@ check:
 	cd tests && make check
 
 run:
-	echo "TODO"
+	convert imgs/img.png img.rgb
+	./src/sobel img.rgb img_out.gray -i img_out_h.gray img_out_v.gray
+	convert -size 512x512 -depth 8 img_out.gray img_out.png
+	convert -size 512x512 -depth 8 img_out_h.gray img_out_h.png
+	convert -size 512x512 -depth 8 img_out_v.gray img_out_v.png
+
 
 clean:
 	cd src && make clean
