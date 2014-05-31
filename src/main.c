@@ -6,14 +6,20 @@
 #include "file_operations.h"
 
 int main(int argc, char *argv[]) {
-    char *file_in, *file_out, *file_out_h, *file_out_v, *file_gray;
-    int inter_files = 0, gray_file = 0;
-    byte *rgb, *gray;
-    int rgb_size, gray_size;
-    int sobel_h[] = {1, 0, -1, 2, 0, -2, 1, 0, -1},
-        sobel_v[] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
-    byte *sobel_h_res, *sobel_v_res;
-    byte *contour_img;
+    char *file_in,
+         *file_out,
+         *file_out_h,
+         *file_out_v,
+         *file_gray;
+
+    byte *rgb,
+         *gray,
+         *sobel_h_res,
+         *sobel_v_res,
+         *contour_img;
+
+    int inter_files = 0,
+        gray_file = 0;
 
     // Get arguments
     if(argc < 3) {
@@ -61,28 +67,20 @@ int main(int argc, char *argv[]) {
     }
 
     // Read file to rgb and get size
-    rgb_size = readFile(file_in, &rgb);
+    int rgb_size = readFile(file_in, &rgb);
 
-    // Get gray representation of the image
-    gray_size = rgbToGray(rgb, &gray, rgb_size);
+    int gray_size = sobelFilter(rgb, &gray, &sobel_h_res, &sobel_v_res, &contour_img, rgb_size);
 
     // Write gray image
     if(gray_file) {
         writeFile(file_gray, gray, gray_size);
     }
 
-    // Make sobel operations
-    itConv(gray, gray_size, sobel_h, &sobel_h_res);
-    itConv(gray, gray_size, sobel_v, &sobel_v_res);
-
     // Write image after each sobel operator
     if(inter_files) {
         writeFile(file_out_h, sobel_h_res, gray_size);
         writeFile(file_out_v, sobel_v_res, gray_size);
     }
-
-    // Calculate contour matrix
-    contour(sobel_h_res, sobel_v_res, gray_size, &contour_img);
 
     // Write sobel img to a file
     writeFile(file_out, contour_img, gray_size);

@@ -107,4 +107,20 @@ void contour(byte *sobel_h, byte *sobel_v, int gray_size, byte **contour_img) {
     }
 }
 
+int sobelFilter(byte *rgb, byte **gray, byte **sobel_h_res, byte **sobel_v_res, byte **contour_img, int rgb_size) {
+    int sobel_h[] = {1, 0, -1, 2, 0, -2, 1, 0, -1},
+        sobel_v[] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
+
+    // Get gray representation of the image
+    int gray_size = rgbToGray(rgb, gray, rgb_size);
+
+    // Make sobel operations
+    itConv(*gray, gray_size, sobel_h, sobel_h_res);
+    itConv(*gray, gray_size, sobel_v, sobel_v_res);
+
+    // Calculate contour matrix
+    contour(*sobel_h_res, *sobel_v_res, gray_size, contour_img);
+
+    return gray_size;
+}
 
