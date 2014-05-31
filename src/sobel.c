@@ -36,9 +36,7 @@ int rgbToGray(byte *rgb, byte **gray, int buffer_size) {
  * Make the operation memory for iterative convolution
  */
 
-void makeOpMem(byte *buffer, int buffer_size, int cindex, byte *op_mem) {
-    int width = sqrt(buffer_size);
-
+void makeOpMem(byte *buffer, int buffer_size, int width, int cindex, byte *op_mem) {
     int bottom = cindex-width < 0;
     int top = cindex+width >= buffer_size;
     int left = cindex % width == 0;
@@ -75,7 +73,7 @@ int convolution(byte *X, int *Y, int c_size) {
  * Iterate Convolution
  */
 
-void itConv(byte *buffer, int buffer_size, int *op, byte **res) {
+void itConv(byte *buffer, int buffer_size, int width, int *op, byte **res) {
     // Allocate memory for result
     *res = malloc(sizeof(byte) * buffer_size);
 
@@ -86,7 +84,7 @@ void itConv(byte *buffer, int buffer_size, int *op, byte **res) {
     // Make convolution for every pixel
     for(int i=0; i<buffer_size; i++) {
         // Make op_mem
-        makeOpMem(buffer, buffer_size, i, op_mem);
+        makeOpMem(buffer, buffer_size, width, i, op_mem);
 
         // Convolution
         (*res)[i] = (byte) (1.0/4.0 * abs(convolution(op_mem, op, SOBEL_OP_SIZE)));
@@ -107,16 +105,18 @@ void contour(byte *sobel_h, byte *sobel_v, int gray_size, byte **contour_img) {
     }
 }
 
-int sobelFilter(byte *rgb, byte **gray, byte **sobel_h_res, byte **sobel_v_res, byte **contour_img, int rgb_size) {
+int sobelFilter(byte *rgb, byte **gray, byte **sobel_h_res, byte **sobel_v_res, byte **contour_img, int width, int height) {
     int sobel_h[] = {1, 0, -1, 2, 0, -2, 1, 0, -1},
         sobel_v[] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
+
+    int rgb_size = width*height*3;
 
     // Get gray representation of the image
     int gray_size = rgbToGray(rgb, gray, rgb_size);
 
     // Make sobel operations
-    itConv(*gray, gray_size, sobel_h, sobel_h_res);
-    itConv(*gray, gray_size, sobel_v, sobel_v_res);
+    itConv(*gray, gray_size, width, sobel_h, sobel_h_res);
+    itConv(*gray, gray_size, width, sobel_v, sobel_v_res);
 
     // Calculate contour matrix
     contour(*sobel_h_res, *sobel_v_res, gray_size, contour_img);

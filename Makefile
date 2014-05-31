@@ -7,7 +7,7 @@ check:
 
 run:
 	convert imgs/img.png imgs/img.rgb
-	./src/sobel imgs/img.rgb imgs/img_out.gray -g imgs/img_out_gray.gray -i imgs/img_out_h.gray imgs/img_out_v.gray
+	./src/sobel imgs/img.rgb imgs/img_out.gray -g imgs/img_out_gray.gray -i imgs/img_out_h.gray imgs/img_out_v.gray -s 512x512
 	convert -size 512x512 -depth 8 imgs/img_out.gray imgs/img_out.png
 	convert -size 512x512 -depth 8 imgs/img_out_gray.gray imgs/img_out_gray.png
 	convert -size 512x512 -depth 8 imgs/img_out_h.gray imgs/img_out_h.png

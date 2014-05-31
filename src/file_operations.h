@@ -3,7 +3,7 @@
 
 #include "macros.h"
 
-int readFile(char *file_name, byte **buffer);
+void readFile(char *file_name, byte **buffer, int buffer_size);
 void writeFile(char *file_name, byte *buffer, int buffer_size);
 
 #endif

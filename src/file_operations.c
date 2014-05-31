@@ -9,14 +9,9 @@
  * Reads file to *buffer. Returns file size.
  */
 
-int readFile(char *file_name, byte **buffer) {
+void readFile(char *file_name, byte **buffer, int buffer_size) {
     // Open
     FILE *file = fopen(file_name, "r");
-
-    // Take file size
-    fseek(file, 0, SEEK_END);
-    int buffer_size = ftell(file);
-    rewind(file);
 
     // Allocate memory for buffer
     *buffer = malloc(sizeof(byte) * buffer_size);
@@ -29,9 +24,6 @@ int readFile(char *file_name, byte **buffer) {
 
     // Close
     fclose(file);
-
-    // Return
-    return buffer_size;
 }
 
 /*

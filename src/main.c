@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "macros.h"
@@ -18,6 +19,9 @@ int main(int argc, char *argv[]) {
          *sobel_v_res,
          *contour_img;
 
+    int rgb_size,
+        width,
+        height;
     int inter_files = 0,
         gray_file = 0;
 
@@ -60,6 +64,30 @@ int main(int argc, char *argv[]) {
             arg_index += 2;
         }
 
+        else if(strcmp(argv[arg_index], "-s") == 0) {
+            if(arg_index+2 > argc) {
+                printf("Usage: TODO\n");
+                return 1;
+            }
+
+            char *width_token = strtok(argv[arg_index+1], "x");
+            if(width_token) {
+                width = atoi(width_token);
+            } else {
+                return 1;
+            }
+
+            char *height_token = strtok(NULL, "x");
+            if(height_token) {
+                height = atoi(height_token);
+            } else {
+                return 1;
+            }
+
+            rgb_size = width*height*3;
+            arg_index += 2;
+        }
+
         else {
             printf("Argument \"%s\", is unknown.\n", argv[arg_index]);
             return 1;
@@ -67,9 +95,9 @@ int main(int argc, char *argv[]) {
     }
 
     // Read file to rgb and get size
-    int rgb_size = readFile(file_in, &rgb);
+    readFile(file_in, &rgb, rgb_size);
 
-    int gray_size = sobelFilter(rgb, &gray, &sobel_h_res, &sobel_v_res, &contour_img, rgb_size);
+    int gray_size = sobelFilter(rgb, &gray, &sobel_h_res, &sobel_v_res, &contour_img, width, height);
 
     // Write gray image
     if(gray_file) {
