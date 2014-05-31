@@ -6,9 +6,11 @@ An implementation of the Sobel operator for edge detection in images. Below ther
 Arguments
 =========
 
-    sobel file_in file_out [-i file_h_out file_v_out] [-g file_gray]
+    sobel file_in file_out [-i file_h_out file_v_out] [-g file_gray] [-s 123x456]
 
 **-i** - Generate intermediate files with the result of the vertical and horizontal operators.
 
 **-g** - Generate the gray scale file.
+
+**-s** - Size of image. Seperated by 'x'.
 
