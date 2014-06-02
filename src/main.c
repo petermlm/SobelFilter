@@ -6,6 +6,8 @@
 #include "sobel.h"
 #include "file_operations.h"
 
+#define ARGS_NEEDED 4
+
 int main(int argc, char *argv[]) {
     char *file_in,
          *file_out,
@@ -26,7 +28,7 @@ int main(int argc, char *argv[]) {
         gray_file = 0;
 
     // Get arguments
-    if(argc < 3) {
+    if(argc < ARGS_NEEDED) {
         printf("Usage: TODO\n");
         return 1;
     }
@@ -35,8 +37,27 @@ int main(int argc, char *argv[]) {
     file_in = argv[1];
     file_out = argv[2];
 
+    // Get size of input image
+    char *width_token = strtok(argv[3], "x");
+    if(width_token) {
+        width = atoi(width_token);
+    } else {
+        printf("Bad image size argument\n");
+        return 1;
+    }
+
+    char *height_token = strtok(NULL, "x");
+    if(height_token) {
+        height = atoi(height_token);
+    } else {
+        printf("Bad image size argument\n");
+        return 1;
+    }
+
+    rgb_size = width*height*3;
+
     // Get optional arguments
-    int arg_index = 3;
+    int arg_index = ARGS_NEEDED;
     while(arg_index < argc) {
         // If there is a flag to create intermediate files
         if(strcmp(argv[arg_index], "-i") == 0) {
@@ -61,30 +82,6 @@ int main(int argc, char *argv[]) {
             gray_file = 1;
             file_gray = argv[arg_index+1];
 
-            arg_index += 2;
-        }
-
-        else if(strcmp(argv[arg_index], "-s") == 0) {
-            if(arg_index+2 > argc) {
-                printf("Usage: TODO\n");
-                return 1;
-            }
-
-            char *width_token = strtok(argv[arg_index+1], "x");
-            if(width_token) {
-                width = atoi(width_token);
-            } else {
-                return 1;
-            }
-
-            char *height_token = strtok(NULL, "x");
-            if(height_token) {
-                height = atoi(height_token);
-            } else {
-                return 1;
-            }
-
-            rgb_size = width*height*3;
             arg_index += 2;
         }
 
