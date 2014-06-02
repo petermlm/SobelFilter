@@ -87,7 +87,14 @@ void itConv(byte *buffer, int buffer_size, int width, int *op, byte **res) {
         makeOpMem(buffer, buffer_size, width, i, op_mem);
 
         // Convolution
-        (*res)[i] = (byte) (1.0/4.0 * abs(convolution(op_mem, op, SOBEL_OP_SIZE)));
+        (*res)[i] = (byte) abs(convolution(op_mem, op, SOBEL_OP_SIZE));
+
+        /*
+         * The abs function is used in here to avoid storing negative numbers
+         * in a byte data type array. It wouldn't make a different if the negative
+         * value was to be stored because the next time it is used the value is
+         * squared.
+         */
     }
 }
 
@@ -101,7 +108,7 @@ void contour(byte *sobel_h, byte *sobel_v, int gray_size, byte **contour_img) {
 
     // Iterate through every pixel to calculate the contour image
     for(int i=0; i<gray_size; i++) {
-        (*contour_img)[i] = 255 - (1.0/2.0)*(sobel_h[i] + sobel_v[i]);
+        (*contour_img)[i] = (byte) sqrt(pow(sobel_h[i], 2) + pow(sobel_v[i], 2));
     }
 }
 
