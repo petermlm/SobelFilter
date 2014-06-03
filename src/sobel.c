@@ -113,7 +113,7 @@ void contour(byte *sobel_h, byte *sobel_v, int gray_size, byte **contour_img) {
 }
 
 int sobelFilter(byte *rgb, byte **gray, byte **sobel_h_res, byte **sobel_v_res, byte **contour_img, int width, int height) {
-    int sobel_h[] = {1, 0, -1, 2, 0, -2, 1, 0, -1},
+    int sobel_h[] = {-1, 0, 1, -2, 0, 2, -1, 0, 1},
         sobel_v[] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
 
     int rgb_size = width*height*3;
