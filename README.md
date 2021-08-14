@@ -3,8 +3,7 @@ An implementation of the Sobel operator for edge detection in images. Below ther
 <img src="readme_imgs/imgin.png" alt="imgin" style="width: 200px;"/>
 <img src="readme_imgs/imgout.png" alt="imgout" style="width: 200px;"/>
 
-Arguments
-=========
+# Arguments
 
     sobel file_in file_out 123x456 [-i file_h_out file_v_out] [-g file_gray]
 
