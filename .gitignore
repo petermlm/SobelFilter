@@ -2,7 +2,6 @@
 *.a
 
 sobel
-check_sobel
 
 img.rgb
 img_out*

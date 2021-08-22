@@ -13,10 +13,6 @@
 
 all:
 	cd src && make
-	cd tests && make
-
-check:
-	cd tests && make check
 
 run:
 	convert imgs/img.png imgs/img.rgb
@@ -28,7 +24,6 @@ run:
 
 clean:
 	cd src && make clean
-	cd tests && make clean
 
 clean_run:
 	rm imgs/img_out* imgs/img.rgb
